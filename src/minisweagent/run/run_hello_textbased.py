@@ -2,6 +2,7 @@
 import yaml
 from pathlib import Path
 import typer
+import logging
 
 from minisweagent import package_dir
 from minisweagent.agents.default import DefaultAgent
@@ -15,6 +16,7 @@ def main(
     task: str = typer.Option(..., "-t", "--task", prompt=True),
     model_name: str = typer.Option("deepseek/deepseek-flash", "-m", "--model"),
 ):
+    logging.basicConfig(level=logging.DEBUG)
     agent = DefaultAgent(
         LitellmTextbasedModel(model_name=model_name),   # ← 空 2：把模型构造换成文本模式类
         LocalEnvironment(),
