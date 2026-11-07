@@ -37,9 +37,9 @@ def print_messages(messages:list[dict],max_chars: int = 80) -> None:
         content = msg.get("content","")
         if len(content) > max_chars:
             content = content[:max_chars] + "..."
-            print(f"[{i}] {role}: {content}")
+        print(f"[{i}] {role}: {content}")
         if role == "exit":
-            exit_status = msg.get("extra","").get("exit_status","")
+            exit_status = msg.get("extra",{}).get("exit_status","")
             print(f"\nExit status:{exit_status}")
 
 
