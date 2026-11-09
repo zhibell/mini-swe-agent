@@ -34,12 +34,18 @@ app = typer.Typer()
 def main(
     task: str = typer.Option(..., "-t", "--task", prompt=True),
     model_name: str = typer.Option("deepseek/deepseek-flash", "-m", "--model"),
-):
+    step_limit: int | None = typer.Option(None, "--step-limit", help="步数上限，0 = 不限制"),
+    ):
     logging.basicConfig(level=logging.DEBUG)
+    agent_cfg: dict = yaml.safe_load(
+        (package_dir / "config" / "default.yaml").read_text()
+    )["agent"]
+    agent_cfg = {**agent_cfg, "step_limit":step_limit}
+
     agent = DefaultAgent(
         LitellmTextbasedModel(model_name=model_name),  
         LocalEnvironment(),
-        **yaml.safe_load(Path(package_dir / "config" / "default.yaml").read_text())["agent"],
+        **agent_cfg,
     )
     agent.run(task) 
     print_messages(agent.messages, max_chars=80)  
